@@ -1,12 +1,13 @@
-import type { JSX } from 'react'
-import './App.css'
+import type { JSX } from "react";
+import { NbrbUsdRateView } from "./components/NbrbUsdRateView";
+import "./App.css";
 
 function App(): JSX.Element {
   return (
     <main className="app">
-      <h1>Currency Radar BY</h1>
+      <NbrbUsdRateView />
     </main>
-  )
+  );
 }
 
-export default App
+export default App;

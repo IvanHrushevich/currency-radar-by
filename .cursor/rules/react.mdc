@@ -8,7 +8,7 @@ alwaysApply: false
 
 ## Prefer
 
-- Functional components with explicit `JSX.Element` return type
+- Functional components with explicit return type (`JSX.Element` or `JSX.Element | null` when empty render is possible)
 - State via `useState`; side effects via `useEffect` with cleanup when needed
 - Domain orchestration in hooks (e.g. `useRates`), not in presentational markup
 - `fetch` for HTTP
