@@ -1,0 +1,37 @@
+---
+description: Prefer undefined over null for absent values
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Undefined instead of null
+
+In this project, represent missing / empty values with `undefined`, not `null`.
+
+## Rules
+
+- Use `T | undefined` (or optional `T?`) instead of `T | null`
+- Initialize empty state with `undefined`, not `null`
+- Clear values with `undefined` / omit the property — do not assign `null`
+- Prefer `value === undefined` / optional chaining over `value === null` checks
+- Do not introduce `null` in new code unless a third-party API requires it at the boundary — map to `undefined` as soon as possible
+
+## Examples
+
+```typescript
+// ❌ BAD
+const [rate, setRate] = useState<NbrbUsdRate | null>(null);
+setError(null);
+
+// ✅ GOOD
+const [rate, setRate] = useState<NbrbUsdRate | undefined>(undefined);
+setError(undefined);
+```
+
+```typescript
+// ❌ BAD
+if (error !== null) { ... }
+
+// ✅ GOOD
+if (error !== undefined) { ... }
+```

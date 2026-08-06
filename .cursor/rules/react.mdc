@@ -1,0 +1,22 @@
+---
+description: React conventions for this Vite app
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React
+
+## Prefer
+
+- Functional components with explicit `JSX.Element` return type
+- State via `useState`; side effects via `useEffect` with cleanup when needed
+- Domain orchestration in hooks (e.g. `useRates`), not in presentational markup
+- `fetch` for HTTP
+- Cancel / ignore stale updates with a `cancelled` flag (or `AbortController`) in effects
+
+## Avoid unless already used or clearly needed
+
+- `useMemo` / `useCallback` by default
+- Class components
+- Global state libraries for this MVP
+- Heavy UI kits

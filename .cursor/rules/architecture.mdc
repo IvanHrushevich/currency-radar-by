@@ -1,0 +1,58 @@
+---
+description: Project architecture — rates providers, UI boundaries, MVP scope
+alwaysApply: true
+---
+
+# Architecture (currency-radar-by)
+
+MVP: NBRB official USD + best «Сдать» USD + diff. Static site for GitHub Pages (no proxy). Minimal styles. No tests.
+
+## Layers
+
+- `App` / UI — display only; no Myfin/HTML knowledge
+- `useRates` — orchestrates NBRB + `BestUsdSellRateProvider`, computes diff
+- `api/nbrb.ts` — NBRB fetch
+- `providers/*` — best sell-rate abstraction and implementations
+- `lib/dayCache.ts` — cache until end of local calendar day
+
+## Best rate abstraction
+
+UI and hooks depend only on:
+
+```typescript
+interface BestUsdSellRate {
+  readonly rate: number;
+  readonly asOf: Date;
+  readonly sourceLabel: string;
+}
+
+interface BestUsdSellRateProvider {
+  fetchBestUsdSellRate(): Promise<BestUsdSellRate>;
+}
+```
+
+- Current implementation: `MyfinBestUsdSellRateProvider` (HTML parse)
+- Active wiring in `src/providers/index.ts` only — swap provider in one place
+- Day-cache wraps the provider (or factory), so a future API provider is cached without UI changes
+
+## Data
+
+- NBRB: `GET https://api.nbrb.by/exrates/rates/431` → `Cur_OfficialRate`, `Date`
+- Myfin: `GET https://myfin.by/currency/minsk` → «Лучшие курсы» → USD → **Сдать**
+- Diff: `best.rate - nbrbOfficial`, always with sign, 4 decimal places
+
+## UI / errors
+
+- Loading: «Загрузка…»
+- One source failed — show the other + error
+- Both ok — three lines; best-rate line includes `sourceLabel`
+
+## Out of scope (do not add unless asked)
+
+- Fancy styles, tests, «Купить», bank lists, history, push notifications
+- Backend / Vite proxy — browser `fetch` only
+- Second best-rate provider beyond the interface + Myfin
+
+## Deploy
+
+- Vite `base: '/currency-radar-by/'` for GitHub Pages

@@ -1,0 +1,29 @@
+---
+description: TypeScript conventions for this project
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript
+
+- Explicit types for function parameters, return types, and variable declarations
+- Prefer `interface` over `type` when possible
+- Use `readonly` for immutable data structures and result objects
+- Prefer type guards over type assertions (`as`)
+- Use generic constraints to make types more specific when generics are needed
+- No `any`; use `unknown` and narrow it
+- Prefer `undefined` for absent values (see `undefined-over-null` rule)
+- External/API contract interfaces end with `Dto` (e.g. `NbrbRateDto`) — not `Response`, `Request`, `Payload`, etc. Domain models keep plain names (`NbrbUsdRate`)
+
+```typescript
+// ❌ BAD
+interface NbrbRateApiResponse { ... }
+const data = await res.json() as NbrbRateApiResponse;
+
+// ✅ GOOD
+interface NbrbRateDto { ... }
+const data: unknown = await res.json();
+if (!isNbrbRateDto(data)) {
+  throw new Error('Unexpected response');
+}
+```
